@@ -12,7 +12,7 @@
 [![Канал: @rupolynews](https://img.shields.io/badge/Канал-@rupolynews-26A5E4.svg?logo=telegram&logoColor=white)](https://t.me/rupolynews)
 [![Бот: @polypulse_ru_bot](https://img.shields.io/badge/Бот-@polypulse__ru__bot-26A5E4.svg?logo=telegram&logoColor=white)](https://t.me/polypulse_ru_bot)
 
-**Живая демка:** алерты в канале [@rupolynews](https://t.me/rupolynews) • личные подписки — [@polypulse_ru_bot](https://t.me/polypulse_ru_bot)
+**Живая демка:** алерты в канале [@rupolynews](https://t.me/rupolynews) | Бот - [@polypulse_ru_bot](https://t.me/polypulse_ru_bot)
 
 [Русский](#-русский) • [English](#-english)
 
