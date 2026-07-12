@@ -1,0 +1,16 @@
+[Unit]
+Description=PolyPulse — Polymarket anomaly alerts (Telegram)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/Poly_bot
+ExecStart=/opt/Poly_bot/venv/bin/python /opt/Poly_bot/main.py
+Restart=always
+RestartSec=10
+# .env читается самим приложением (python-dotenv), EnvironmentFile не нужен
+
+[Install]
+WantedBy=multi-user.target
