@@ -24,7 +24,7 @@
 
 **PolyPulse** следит за рынками предсказаний [Polymarket](https://polymarket.com) и публикует в Telegram-канал события, которые легко пропустить, листая сайт руками: резкие движения вероятности, приток крупных денег, свежие рынки с аномальным объёмом. К каждому алерту DeepSeek пишет короткий комментарий на русском — сдержанный, без выдуманных причин и финансовых советов.
 
-Весь сервис — один Python-процесс на дешёвом VPS: без Docker, без Redis, без очередей. SQLite вместо базы данных, systemd вместо оркестратора.
+Весь сервис - один Python-процесс на дешёвом VPS: без Docker, без Redis, без очередей. SQLite вместо базы данных, systemd вместо оркестратора.
 
 ### Типы алертов
 
@@ -98,7 +98,7 @@ The whole service is a single Python process on a cheap VPS: no Docker, no Redis
 | 🆕 | **Big new market** | created < 48 h ago, already at $100k+ |
 | ⏰ | **Closing soon** | resolves within 48 h with a contested outcome (35–65%) |
 
-Anti-spam: a 6-hour cooldown per market+type pair and an hourly publish cap — when over budget, the highest-scored alerts (move size × volume) win.
+Anti-spam: a 6-hour cooldown per market+type pair and an hourly publish cap - when over budget, the highest-scored alerts (move size × volume) win.
 
 ### How it works
 
