@@ -104,7 +104,10 @@ def snapshot_near(
 ) -> sqlite3.Row | None:
     """Ближайший к target_ts снапшот рынка в пределах ±tolerance_min минут."""
     # ts хранится как ISO с 'T'/'Z' — сравнивать строки с выводом datetime() нельзя,
-    # поэтому все сравнения времени в этом модуле идут через epoch (strftime('%s'))
+    # поэтому все сравнения времени в этом модуле идут через epoch (strftime('%s')).
+    # ВАЖНО: strftime возвращает TEXT, а TEXT в SQLite «больше» любого числа —
+    # при сравнении с числом (результатом арифметики) оборачивать в CAST(... AS INTEGER).
+    # Внутри арифметики (вычитание, ABS) CAST не нужен — коэрция происходит сама.
     row = conn.execute(
         """SELECT *, ABS(strftime('%s', ts) - strftime('%s', :target)) AS dist
            FROM snapshots WHERE condition_id = :cid
@@ -128,7 +131,7 @@ def volume_deltas_24h(conn: sqlite3.Connection, condition_id: str, now_ts: str) 
     rows = conn.execute(
         """SELECT volume_total FROM snapshots
            WHERE condition_id = ?
-             AND strftime('%s', ts) >= strftime('%s', ?) - 86400
+             AND CAST(strftime('%s', ts) AS INTEGER) >= strftime('%s', ?) - 86400
              AND volume_total IS NOT NULL
            ORDER BY ts""",
         (condition_id, now_ts),
@@ -139,7 +142,7 @@ def volume_deltas_24h(conn: sqlite3.Connection, condition_id: str, now_ts: str) 
 
 def delete_old_snapshots(conn: sqlite3.Connection, days: int = 30) -> int:
     cur = conn.execute(
-        "DELETE FROM snapshots WHERE strftime('%s', ts) < strftime('%s', 'now') - ?",
+        "DELETE FROM snapshots WHERE CAST(strftime('%s', ts) AS INTEGER) < strftime('%s', 'now') - ?",
         (days * 86400,),
     )
     conn.commit()
@@ -174,7 +177,7 @@ def cooldown_active(
     row = conn.execute(
         """SELECT 1 FROM alert_cooldowns
            WHERE condition_id = ? AND alert_type = ?
-             AND strftime('%s', last_ts) > strftime('%s', 'now') - ?""",
+             AND CAST(strftime('%s', last_ts) AS INTEGER) > strftime('%s', 'now') - ?""",
         (condition_id, alert_type, int(hours * 3600)),
     ).fetchone()
     return row is not None
@@ -200,7 +203,7 @@ def touch_cooldown(conn: sqlite3.Connection, condition_id: str, alert_type: str)
 def published_last_hour(conn: sqlite3.Connection) -> int:
     row = conn.execute(
         """SELECT COUNT(*) AS n FROM alerts
-           WHERE published = 1 AND strftime('%s', ts) > strftime('%s', 'now') - 3600"""
+           WHERE published = 1 AND CAST(strftime('%s', ts) AS INTEGER) > strftime('%s', 'now') - 3600"""
     ).fetchone()
     return row["n"]
 
